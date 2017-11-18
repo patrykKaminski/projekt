@@ -1,0 +1,42 @@
+﻿@model WebApplication7.Models.KontaktModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>KontaktModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Temat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Temat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Treść)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Treść)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
