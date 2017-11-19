@@ -4,114 +4,113 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
-using WebApplication7.Models;
+using WebApplication8.Models;
 
-namespace WebApplication7.Controllers
+namespace WebApplication8.Controllers
 {
-    public class KontaktModelsController : Controller
+    public class ContactFormsController : Controller
     {
-        private Models.AppContext db = new Models.AppContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: KontaktModels
+        // GET: ContactForms
         public ActionResult Index()
         {
-            return View(db.KontaktModels.ToList());
+            return View(db.ContactForms.ToList());
         }
 
-        // GET: KontaktModels/Details/5
+        // GET: ContactForms/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            KontaktModel kontaktModel = db.KontaktModels.Find(id);
-            if (kontaktModel == null)
+            ContactForm contactForm = db.ContactForms.Find(id);
+            if (contactForm == null)
             {
                 return HttpNotFound();
             }
-            return View(kontaktModel);
+            return View(contactForm);
         }
 
-        // GET: KontaktModels/Create
+        // GET: ContactForms/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: KontaktModels/Create
+        // POST: ContactForms/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Email,Temat,Treść")] KontaktModel kontaktModel)
+        public ActionResult Create([Bind(Include = "Id,Email,Subject,body")] ContactForm contactForm)
         {
             if (ModelState.IsValid)
             {
-                db.KontaktModels.Add(kontaktModel);
+                db.ContactForms.Add(contactForm);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(kontaktModel);
+            return View(contactForm);
         }
 
-        // GET: KontaktModels/Edit/5
+        // GET: ContactForms/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            KontaktModel kontaktModel = db.KontaktModels.Find(id);
-            if (kontaktModel == null)
+            ContactForm contactForm = db.ContactForms.Find(id);
+            if (contactForm == null)
             {
                 return HttpNotFound();
             }
-            return View(kontaktModel);
+            return View(contactForm);
         }
 
-        // POST: KontaktModels/Edit/5
+        // POST: ContactForms/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Email,Temat,Treść")] KontaktModel kontaktModel)
+        public ActionResult Edit([Bind(Include = "Id,Email,Subject,body")] ContactForm contactForm)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(kontaktModel).State = EntityState.Modified;
+                db.Entry(contactForm).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(kontaktModel);
+            return View(contactForm);
         }
 
-        // GET: KontaktModels/Delete/5
+        // GET: ContactForms/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            KontaktModel kontaktModel = db.KontaktModels.Find(id);
-            if (kontaktModel == null)
+            ContactForm contactForm = db.ContactForms.Find(id);
+            if (contactForm == null)
             {
                 return HttpNotFound();
             }
-            return View(kontaktModel);
+            return View(contactForm);
         }
 
-        // POST: KontaktModels/Delete/5
+        // POST: ContactForms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            KontaktModel kontaktModel = db.KontaktModels.Find(id);
-            db.KontaktModels.Remove(kontaktModel);
+            ContactForm contactForm = db.ContactForms.Find(id);
+            db.ContactForms.Remove(contactForm);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -123,30 +122,6 @@ namespace WebApplication7.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private void SendEmail(KontaktModel )
-        {
-            var smtpClient = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                UseDefaultCredentials = true,
-                Credentials = new NetworkCredential("gym550182@gmail.com", "!QAZ2wsx#EDC")
-            };
-
-            var mailMessage = new MailMessage
-            {
-                Sender = new MailAddress("gym550182@gmail.com"),
-                From = { KontaktModel.Email };
-                To = { mailModel.Email },
-                Body = "tresc maila",
-                IsBodyHtml = true
-            };
-
-            smtpClient.Send(mailMessage);
-
         }
     }
 }
