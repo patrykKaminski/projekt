@@ -39,6 +39,10 @@ namespace WebApplication8.Repository
         {
             using (var context = new ApplicationDbContext())
             {
+                if (context.Entry(entity).State == System.Data.Entity.EntityState.Detached)
+                {
+                    context.Set<T>().Attach(entity);
+                }
                 context.Set<T>().Remove(entity);
             }
         }
