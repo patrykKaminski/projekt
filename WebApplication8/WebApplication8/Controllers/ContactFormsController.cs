@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using WebApplication8.Models;
+using WebApplication8.Repository;
 using WebApplication8.Service;
 
 namespace WebApplication8.Controllers
@@ -15,17 +16,20 @@ namespace WebApplication8.Controllers
     {
         private EmailService _emailService;
 
+        private ContactFormRepository _ContactRepository;
+
         public ContactFormsController()
         {
             _emailService = new Service.EmailService();
+            _ContactRepository = new ContactFormRepository();
         }
 
-        private ApplicationDbContext db = new ApplicationDbContext();
+        
 
         // GET: ContactForms
         public ActionResult Index()
         {
-            return View(db.ContactForms.ToList());
+            return View(_ContactRepository.GetWhere(x => x.Id>0));
         }
 
         // GET: ContactForms/Details/5
@@ -35,7 +39,7 @@ namespace WebApplication8.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ContactForm contactForm = db.ContactForms.Find(id);
+            ContactForm contactForm = _ContactRepository.GetWhere(x => x.Id == id.Value).FirstOrDefault();
             if (contactForm == null)
             {
                 return HttpNotFound();
@@ -54,8 +58,7 @@ namespace WebApplication8.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.ContactForms.Add(contactForm);
-                db.SaveChanges();
+                _ContactRepository.Create(contactForm);
                 var message = _emailService.CreateMailMessage(contactForm);
                 _emailService.SendEmail(message);
                 return RedirectToAction("Index");
@@ -72,7 +75,7 @@ namespace WebApplication8.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ContactForm contactForm = db.ContactForms.Find(id);
+            ContactForm contactForm = _ContactRepository.GetWhere(x => x.Id == id.Value).FirstOrDefault();
             if (contactForm == null)
             {
                 return HttpNotFound();
@@ -85,9 +88,9 @@ namespace WebApplication8.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            ContactForm contactForm = db.ContactForms.Find(id);
-            db.ContactForms.Remove(contactForm);
-            db.SaveChanges();
+            ContactForm contactForm = _ContactRepository.GetWhere(x => x.Id == id).FirstOrDefault();
+            _ContactRepository.Delete(contactForm);
+
             return RedirectToAction("Index");
         }
 
