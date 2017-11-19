@@ -7,20 +7,20 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using zadanie.Models;
+using zadanie.Repository;
 
 namespace zadanie.Controllers
 {
     public class rowersController : Controller
     {
+        private ContactFormRepositoryRower _ContactFormRepositoryRower;
         private AppDbContext db = new AppDbContext();
 
-        // GET: rowers
         public ActionResult Index()
         {
             return View(db.rowerDB.ToList());
         }
 
-        // GET: rowers/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -35,15 +35,11 @@ namespace zadanie.Controllers
             return View(rower);
         }
 
-        // GET: rowers/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: rowers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "id,marka,iloscBiegow,rozmiarRamy")] rower rower)
@@ -58,7 +54,6 @@ namespace zadanie.Controllers
             return View(rower);
         }
 
-        // GET: rowers/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -73,12 +68,9 @@ namespace zadanie.Controllers
             return View(rower);
         }
 
-        // POST: rowers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,marka,iloscBiegow,rozmiarRamy")] rower rower)
+        public ActionResult Edit(rower rower)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +81,6 @@ namespace zadanie.Controllers
             return View(rower);
         }
 
-        // GET: rowers/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -104,7 +95,6 @@ namespace zadanie.Controllers
             return View(rower);
         }
 
-        // POST: rowers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

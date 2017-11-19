@@ -7,20 +7,20 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using zadanie.Models;
+using zadanie.Repository;
 
 namespace zadanie.Controllers
 {
     public class czlowieksController : Controller
     {
+        private ContactFormRepositoryCzlowiek _ContactFormRepositoryCzlowiek;
         private AppDbContext db = new AppDbContext();
 
-        // GET: czlowieks
         public ActionResult Index()
         {
             return View(db.czlowiekDB.ToList());
         }
 
-        // GET: czlowieks/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -41,12 +41,9 @@ namespace zadanie.Controllers
             return View();
         }
 
-        // POST: czlowieks/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,wiek,waga,wzrost")] czlowiek czlowiek)
+        public ActionResult Create(czlowiek czlowiek)
         {
             if (ModelState.IsValid)
             {
@@ -73,12 +70,9 @@ namespace zadanie.Controllers
             return View(czlowiek);
         }
 
-        // POST: czlowieks/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,wiek,waga,wzrost")] czlowiek czlowiek)
+        public ActionResult Edit( czlowiek czlowiek)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +83,6 @@ namespace zadanie.Controllers
             return View(czlowiek);
         }
 
-        // GET: czlowieks/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -104,7 +97,6 @@ namespace zadanie.Controllers
             return View(czlowiek);
         }
 
-        // POST: czlowieks/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

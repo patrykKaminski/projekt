@@ -7,46 +7,42 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using zadanie.Models;
+using zadanie.Repository;
 
 namespace zadanie.Controllers
 {
     public class autoesController : Controller
     {
+        private ContactFormRepositoryAuto _ContactFormRepositoryAuto;
         private AppDbContext db = new AppDbContext();
 
-        // GET: autoes
         public ActionResult Index()
         {
-            return View(db.autoDB.ToList());
+            return View(_ContactFormRepositoryAuto.GetWhere(x => x.id > 0));
         }
 
-        // GET: autoes/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            auto auto = db.autoDB.Find(id);
+            auto auto = _ContactFormRepositoryAuto.GetWhere(x => x.id == id.Value).FirstOrDefault();
             if (auto == null)
             {
                 return HttpNotFound();
             }
             return View(auto);
         }
-
-        // GET: autoes/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: autoes/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+     
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,marka,model,rok")] auto auto)
+        public ActionResult Create( auto auto)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +54,6 @@ namespace zadanie.Controllers
             return View(auto);
         }
 
-        // GET: autoes/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -73,12 +68,10 @@ namespace zadanie.Controllers
             return View(auto);
         }
 
-        // POST: autoes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,marka,model,rok")] auto auto)
+        public ActionResult Edit( auto auto)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +82,6 @@ namespace zadanie.Controllers
             return View(auto);
         }
 
-        // GET: autoes/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -104,7 +96,7 @@ namespace zadanie.Controllers
             return View(auto);
         }
 
-        // POST: autoes/Delete/5
+       
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
