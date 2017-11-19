@@ -7,11 +7,19 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using WebApplication8.Models;
+using WebApplication8.Service;
 
 namespace WebApplication8.Controllers
 {
     public class ContactFormsController : Controller
     {
+        private EmailService _emailService;
+
+        public ContactFormsController()
+        {
+            _emailService = new Service.EmailService();
+        }
+
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: ContactForms
@@ -35,60 +43,28 @@ namespace WebApplication8.Controllers
             return View(contactForm);
         }
 
-        // GET: ContactForms/Create
         public ActionResult Create()
         {
             return View();
         }
-
-        // POST: ContactForms/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Email,Subject,body")] ContactForm contactForm)
+        public ActionResult Create( ContactForm contactForm)
         {
             if (ModelState.IsValid)
             {
                 db.ContactForms.Add(contactForm);
                 db.SaveChanges();
+                var message = _emailService.CreateMailMessage(contactForm);
+                _emailService.SendEmail(message);
                 return RedirectToAction("Index");
             }
 
             return View(contactForm);
         }
 
-        // GET: ContactForms/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ContactForm contactForm = db.ContactForms.Find(id);
-            if (contactForm == null)
-            {
-                return HttpNotFound();
-            }
-            return View(contactForm);
-        }
-
-        // POST: ContactForms/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Email,Subject,body")] ContactForm contactForm)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(contactForm).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(contactForm);
-        }
-
+       
         // GET: ContactForms/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -115,13 +91,6 @@ namespace WebApplication8.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        
     }
 }
