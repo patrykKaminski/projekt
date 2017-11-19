@@ -1,0 +1,42 @@
+﻿@model zadanie.Models.czlowiek
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>czlowiek</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.wiek)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.wiek)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.waga)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.waga)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.wzrost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.wzrost)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
